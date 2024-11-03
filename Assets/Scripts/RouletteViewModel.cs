@@ -8,17 +8,18 @@ using Utilities;
 
 public class RouletteViewModel : MonoBehaviour
 {
-    [FormerlySerializedAs("controller")] [SerializeField] private RouletteModel model;
+    [SerializeField] private RouletteModel model;
     [SerializeField] private List<Slot> slots;
     [SerializeField] private Button spinButton;
 
+    [SerializeField] private float baseDelay;
 
     private void OnEnable()
     {
         AddListeners();
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         RemoveListeners();
     }
@@ -38,9 +39,13 @@ public class RouletteViewModel : MonoBehaviour
         }
     }
 
-    private void TriggerRoulette()
+    public void TriggerRoulette()
     {
         model.SpinRoulette();
+        for (int i = 0; i < slots.Count; i++)
+        {
+            slots[i].AnimateHighlight(baseDelay * (i + 1));
+        }
     }
 
     private void AddListeners()
