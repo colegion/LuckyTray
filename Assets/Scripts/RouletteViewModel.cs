@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Utilities;
 
 public class RouletteViewModel : MonoBehaviour
 {
-    [SerializeField] private RouletteController controller;
+    [FormerlySerializedAs("controller")] [SerializeField] private RouletteModel model;
     [SerializeField] private List<Slot> slots;
     [SerializeField] private Button spinButton;
 
@@ -39,7 +40,7 @@ public class RouletteViewModel : MonoBehaviour
 
     private void TriggerRoulette()
     {
-        controller.SpinRoulette();
+        model.SpinRoulette();
     }
 
     private void AddListeners()

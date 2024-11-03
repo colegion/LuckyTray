@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utilities;
 
-public class RouletteController : MonoBehaviour
+public class RouletteModel : MonoBehaviour
 {
     [SerializeField] private RouletteViewModel rouletteViewModel;
     [SerializeField] private List<RewardConfig> rouletteRewards;
