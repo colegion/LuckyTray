@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Utilities;
 
@@ -19,8 +20,9 @@ public class RouletteModel : MonoBehaviour
         rouletteViewModel.DistributeRewardsToSlots(rouletteRewards);
     }
 
-    public void SpinRoulette()
+    public async Task<Utility.RewardType> SpinRoulette()
     {
-        
+        var outcome = await CloudGateway.GetOutcome();
+        return Utility.GetRewardTypeAsEnum(outcome);
     }
 }

@@ -16,8 +16,11 @@ public class Slot : MonoBehaviour
     [Header("Tween Settings")] 
     [SerializeField] private float highlightDuration;
 
+
+    private RewardConfig _config;
     public void ConfigureSelf(RewardConfig config)
     {
+        _config = config;
         rewardField.sprite = config.rewardSprite;
     }
 
@@ -35,6 +38,11 @@ public class Slot : MonoBehaviour
                 
             });
         });
+    }
+
+    public Utility.RewardType GetRewardType()
+    {
+        return _config.rewardType;
     }
     
     [Serializable]

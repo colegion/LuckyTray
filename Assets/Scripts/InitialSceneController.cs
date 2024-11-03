@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,6 +12,12 @@ public class InitialSceneController : MonoBehaviour
     [SerializeField] private Button playButton;
 
     private readonly string _gameSceneName = "BarbecuePartyScene";
+
+    private async void Awake()
+    {
+        await UnityServices.InitializeAsync();
+        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+    }
 
     private void OnEnable()
     {

@@ -39,13 +39,34 @@ public class RouletteViewModel : MonoBehaviour
         }
     }
 
-    public void TriggerRoulette()
+    public async void TriggerRoulette()
     {
-        model.SpinRoulette();
-        for (int i = 0; i < slots.Count; i++)
+        _highlightCoroutine = StartCoroutine(AnimateSlotsProgressively());
+        var rewardType = await model.SpinRoulette();
+        
+        StopCoroutine(_highlightCoroutine);
+        foreach (var slot in slots)
         {
-            slots[i].AnimateHighlight(baseDelay * (i + 1));
+            if (slot.GetRewardType() == rewardType)
+            {
+                slot.AnimateHighlight(0f);
+            }
         }
+    }
+
+    private Coroutine _highlightCoroutine;
+    private IEnumerator AnimateSlotsProgressively()
+    {
+        while (true)
+        {
+            for (int i = 0; i < slots.Count; i++)
+            {
+                slots[i].AnimateHighlight(0f);
+                yield return new WaitForSeconds(baseDelay);
+            }
+        }
+
+        yield return null;
     }
 
     private void AddListeners()
