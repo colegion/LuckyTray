@@ -21,5 +21,12 @@ namespace Utilities
             Pineapple,
             Shrimp,
         }
+
+        public enum SlotStatus
+        {
+            Available = 0,
+            Granted,
+            Claimed,
+        }
     }
 }
