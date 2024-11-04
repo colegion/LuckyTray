@@ -28,7 +28,7 @@ namespace Utilities
         {
             rewardField.sprite = Utility.GetRewardConfigByType(reward.Key).rewardSprite;
             rewardField.enabled = true;
-            rewardCount.text = $"{reward.Value}";
+            rewardCount.text = $"x{reward.Value}";
             _isAvailable = false;
         }
 
@@ -37,6 +37,7 @@ namespace Utilities
             rewardField.sprite = null;
             rewardField.enabled = false;
             rewardCount.text = "";
+            _isAvailable = true;
         }
 
         private void AnimateSlot()

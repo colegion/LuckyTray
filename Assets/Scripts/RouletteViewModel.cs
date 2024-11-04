@@ -90,7 +90,7 @@ public class RouletteViewModel : MonoBehaviour
     private void ToggleButtonInteractable(bool toggle)
     {
         spinButton.interactable = toggle;
-        spinButton.transition = toggle ? Selectable.Transition.Animation : Selectable.Transition.None;
+        spinButton.transition = toggle ? Selectable.Transition.ColorTint : Selectable.Transition.None;
     }
 
     private void AddListeners()

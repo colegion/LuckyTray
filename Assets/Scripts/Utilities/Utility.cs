@@ -25,6 +25,11 @@ namespace Utilities
         {
             return _rewards.Find(x => x.rewardType == type);
         }
+
+        public static List<RewardConfig> GetRewards()
+        {
+            return _rewards;
+        }
         
         public enum RewardType
         {

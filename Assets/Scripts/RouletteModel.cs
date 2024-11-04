@@ -8,16 +8,15 @@ using Utilities;
 public class RouletteModel : MonoBehaviour
 {
     [SerializeField] private RouletteViewModel rouletteViewModel;
-    [SerializeField] private List<RewardConfig> rouletteRewards;
 
-    private void OnEnable()
+    private void Start()
     {
         InitiateRoulette();
     }
 
     private void InitiateRoulette()
     {
-        rouletteViewModel.DistributeRewardsToSlots(rouletteRewards);
+        rouletteViewModel.DistributeRewardsToSlots(Utility.GetRewards());
     }
 
     public async Task<Utility.RewardType> SpinRoulette()
