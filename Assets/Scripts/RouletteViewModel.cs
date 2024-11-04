@@ -9,9 +9,10 @@ using Utilities;
 public class RouletteViewModel : MonoBehaviour
 {
     [SerializeField] private RouletteModel model;
+    [SerializeField] private WalletUIHelper walletUIHelper;
     [SerializeField] private List<Slot> slots;
     [SerializeField] private Button spinButton;
-
+    
     [SerializeField] private float baseDelay;
     
     private Utility.RewardType _lastOutcomeAsEnum;
@@ -79,7 +80,11 @@ public class RouletteViewModel : MonoBehaviour
             if (slots[i] == _lastOutcomeAsSlot)
             {
                 _lastOutcomeAsSlot.HandleOnSlotGranted(Utility.SlotStatus.Granted);
-                ToggleButtonInteractable(true);
+                walletUIHelper.AnimateRewardClaim(Utility.GetRewardConfigByType(_lastOutcomeAsEnum), () =>
+                {
+                    ToggleButtonInteractable(true);
+                });
+                
                 break;
             }
         }

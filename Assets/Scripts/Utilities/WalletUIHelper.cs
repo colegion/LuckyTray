@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using Sequence = DG.Tweening.Sequence;
 
 namespace Utilities
 {
@@ -14,6 +16,8 @@ namespace Utilities
         [SerializeField] private GameObject walletPanel;
         [SerializeField] private GridLayoutGroup gridLayoutGroup;
         [SerializeField] private WalletSlot walletSlot;
+
+        [SerializeField] private WalletTrailObject outcomeTrail;
 
         private List<WalletSlot> _pooledSlots = new List<WalletSlot>();
         private int _poolAmount = 20;
@@ -30,6 +34,18 @@ namespace Utilities
         private void OnDisable()
         {
             RemoveListeners();
+        }
+
+        public void AnimateRewardClaim(RewardConfig config, Action onComplete)
+        {
+            var temp = Instantiate(outcomeTrail, transform.position, Quaternion.identity);
+            temp.ConfigureSelf(config);
+            temp.AnimateParticle(bagButton.GetComponent<RectTransform>(), () =>
+            {
+                Destroy(temp.gameObject);
+                bagButton.transform.DOShakeScale(0.5f, 0.15f).SetEase(Ease.Linear);
+                onComplete?.Invoke();
+            });
         }
 
         private void EnablePanel()
