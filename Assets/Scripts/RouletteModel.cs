@@ -23,6 +23,8 @@ public class RouletteModel : MonoBehaviour
     public async Task<Utility.RewardType> SpinRoulette()
     {
         var outcome = await CloudGateway.GetOutcome();
-        return Utility.GetRewardTypeAsEnum(outcome);
+        var outcomeAsEnum = Utility.GetRewardTypeAsEnum(outcome);
+        Wallet.AddReward(outcomeAsEnum);
+        return outcomeAsEnum;
     }
 }
