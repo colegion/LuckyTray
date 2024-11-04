@@ -18,6 +18,7 @@ namespace Utilities
         [SerializeField] private WalletSlot walletSlot;
 
         [SerializeField] private WalletTrailObject outcomeTrail;
+        [SerializeField] private Vector3 outcomeTarget;
 
         private List<WalletSlot> _pooledSlots = new List<WalletSlot>();
         private int _poolAmount = 20;
@@ -38,11 +39,10 @@ namespace Utilities
 
         public void AnimateRewardClaim(RewardConfig config, Action onComplete)
         {
-            var temp = Instantiate(outcomeTrail, transform.position, Quaternion.identity);
-            temp.ConfigureSelf(config);
-            temp.AnimateParticle(bagButton.GetComponent<RectTransform>(), () =>
+            
+            outcomeTrail.ConfigureSelf(config);
+            outcomeTrail.AnimateParticle(bagButton.transform.position, () =>
             {
-                Destroy(temp.gameObject);
                 bagButton.transform.DOShakeScale(0.5f, 0.15f).SetEase(Ease.Linear);
                 onComplete?.Invoke();
             });

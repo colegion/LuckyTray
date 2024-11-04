@@ -7,12 +7,13 @@ namespace Utilities
 {
     public class WalletTrailObject : MonoBehaviour
     {
-        [SerializeField] private Image rewardField;
+        [SerializeField] private SpriteRenderer rewardField;
         [SerializeField] private ParticleSystem trailParticle;
 
         public void ConfigureSelf(RewardConfig rewardConfig)
         {
             rewardField.sprite = rewardConfig.rewardSprite;
+            rewardField.enabled = true;
             var main = trailParticle.main;
             var renderer = trailParticle.GetComponent<ParticleSystemRenderer>();
             Material material = new Material(Shader.Find("Sprites/Default"));
@@ -20,13 +21,21 @@ namespace Utilities
             renderer.material = material;
         }
 
-        public void AnimateParticle(RectTransform target, Action onComplete)
+        public void AnimateParticle(Vector3 target, Action onComplete)
         {
             trailParticle.Play();
-            transform.DOLocalMove(target.anchoredPosition, 0.5f).SetEase(Ease.OutBounce).OnComplete(() =>
+            transform.DOMove(target, 0.5f).SetEase(Ease.OutBounce).OnComplete(() =>
             {
+                ResetSelf();
                 onComplete?.Invoke();
             });
+        }
+
+        private void ResetSelf()
+        {
+            rewardField.enabled = false;
+            trailParticle.Stop();
+            transform.position = Vector3.zero;
         }
     }
 }
