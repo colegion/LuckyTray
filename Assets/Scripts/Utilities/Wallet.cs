@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,8 +14,23 @@ namespace Utilities
             {
                 _playerRewards[type]++;
             }
+            
+            PlayerPrefs.SetInt(type.ToString(), _playerRewards[type]);
 
             UIShouldUpdate = true;
+        }
+
+        public static void FetchUserRewards()
+        {
+            _playerRewards = new Dictionary<Utility.RewardType, int>();
+            for (int i = 0; i < Enum.GetValues(typeof(Utility.RewardType)).Length; i++)
+            {
+                var rewardCount = PlayerPrefs.GetInt(i.ToString(), 0);
+                if (rewardCount > 0)
+                {
+                    _playerRewards.Add((Utility.RewardType)i, rewardCount);
+                }
+            }
         }
 
         public static Dictionary<Utility.RewardType, int> GetPlayerRewards()

@@ -6,6 +6,7 @@ using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Utilities;
 
 public class InitialSceneController : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class InitialSceneController : MonoBehaviour
     {
         await UnityServices.InitializeAsync();
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        Wallet.FetchUserRewards();
     }
 
     private void OnEnable()
