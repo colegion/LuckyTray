@@ -13,6 +13,9 @@ public class RouletteViewModel : MonoBehaviour
     [SerializeField] private Button spinButton;
 
     [SerializeField] private float baseDelay;
+    
+    private Utility.RewardType _lastOutcomeAsEnum;
+    private Slot _lastOutcomeAsSlot;
 
     private void OnEnable()
     {
@@ -39,34 +42,55 @@ public class RouletteViewModel : MonoBehaviour
         }
     }
 
-    public async void TriggerRoulette()
+    private async void TriggerRoulette()
     {
-        _highlightCoroutine = StartCoroutine(AnimateSlotsProgressively());
-        var rewardType = await model.SpinRoulette();
-        
-        StopCoroutine(_highlightCoroutine);
-        foreach (var slot in slots)
+        ToggleButtonInteractable(false);
+        if (_lastOutcomeAsSlot != null)
         {
-            if (slot.GetRewardType() == rewardType)
-            {
-                slot.AnimateHighlight(0f);
-            }
+            _lastOutcomeAsSlot.SetSpriteByState(Utility.SlotStatus.Claimed);
         }
+        StartCoroutine(AnimateSlotsProgressively());
+        _lastOutcomeAsEnum = await model.SpinRoulette();
+        SetLastOutcomeAsSlot();
     }
 
-    private Coroutine _highlightCoroutine;
+    private void SetLastOutcomeAsSlot()
+    {
+        _lastOutcomeAsSlot = slots.Find(slot => slot.GetRewardType() == _lastOutcomeAsEnum);
+    }
+    
     private IEnumerator AnimateSlotsProgressively()
     {
-        while (true)
+        var iterationCount = 0;
+        while (iterationCount < 3)
         {
             for (int i = 0; i < slots.Count; i++)
             {
-                slots[i].AnimateHighlight(0f);
+                slots[i].AnimateHighlight();
                 yield return new WaitForSeconds(baseDelay);
             }
+            iterationCount++;
         }
 
+        for (int i = 0; i < slots.Count; i++)
+        {
+            slots[i].AnimateHighlight();
+            yield return new WaitForSeconds(baseDelay);
+            if (slots[i] == _lastOutcomeAsSlot)
+            {
+                _lastOutcomeAsSlot.HandleOnSlotGranted(Utility.SlotStatus.Granted);
+                ToggleButtonInteractable(true);
+                break;
+            }
+        }
+        
         yield return null;
+    }
+
+    private void ToggleButtonInteractable(bool toggle)
+    {
+        spinButton.interactable = toggle;
+        spinButton.transition = toggle ? Selectable.Transition.Animation : Selectable.Transition.None;
     }
 
     private void AddListeners()

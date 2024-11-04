@@ -6,16 +6,10 @@ namespace Utilities
     public class Utility : MonoBehaviour
     {
 
-        public static RewardType GetRewardTypeAsEnum(string outcome)
+        public static RewardType GetRewardTypeAsEnum(int outcome)
         {
-            // Try to parse the string to the RewardType enum
-            if (Enum.TryParse<RewardType>(outcome, true, out var rewardType))
-            {
-                return rewardType;
-            }
-    
-            // If parsing fails, throw an exception
-            throw new Exception("Undefined enum type!");
+            var type = (RewardType)outcome;
+            return type;
         }
 
         
@@ -48,7 +42,7 @@ namespace Utilities
         [Serializable]
         public class Outcome
         {
-            public string outcome;
+            public int outcome;
         }
     }
 }

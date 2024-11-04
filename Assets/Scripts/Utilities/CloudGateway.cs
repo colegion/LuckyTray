@@ -10,7 +10,7 @@ namespace Utilities
     {
         private const string DECIDE_OUTCOME_ENDPOINT = "DecideOutcome";
 
-        public static async Task<string> GetOutcome()
+        public static async Task<int> GetOutcome()
         {
             var args = new Dictionary<string, object>();
             try
@@ -21,7 +21,7 @@ namespace Utilities
             catch (Exception e)
             {
                 Debug.LogError($"Error calling Cloud Code: {e}");
-                return null;
+                return -1;
             }
         }
     }

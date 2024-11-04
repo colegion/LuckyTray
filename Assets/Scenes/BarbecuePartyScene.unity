@@ -1101,7 +1101,7 @@ MonoBehaviour:
   - {fileID: 1414394866}
   - {fileID: 1805327501}
   spinButton: {fileID: 1573597792}
-  baseDelay: 0.3
+  baseDelay: 0.15
 --- !u!114 &765641030
 MonoBehaviour:
   m_ObjectHideFlags: 0

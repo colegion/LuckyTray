@@ -8,6 +8,7 @@ using Utilities;
 public class Slot : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] private SpriteRenderer slotBg;
     [SerializeField] private SpriteRenderer rewardField;
     [SerializeField] private SpriteRenderer slotHighlight;
     [SerializeField] private List<SlotState> states;
@@ -24,10 +25,8 @@ public class Slot : MonoBehaviour
         rewardField.sprite = config.rewardSprite;
     }
 
-    public void AnimateHighlight(float delay)
+    public void AnimateHighlight()
     {
-        DOVirtual.DelayedCall(delay, () =>
-        {
             slotHighlight.enabled = true;
             slotHighlight.DOColor(new Color(1, 1, 1, 1), .35f).SetEase(Ease.Linear).OnComplete(() =>
             {
@@ -37,16 +36,26 @@ public class Slot : MonoBehaviour
                 });
                 
             });
-        });
     }
 
+    public void HandleOnSlotGranted(Utility.SlotStatus status)
+    {
+        tickSprite.enabled = true;
+        SetSpriteByState(status);
+    }
+
+    public void SetSpriteByState(Utility.SlotStatus status)
+    {
+        slotBg.sprite = states.Find(x => x.slotStatus == status).statusSprite;
+    }
+    
     public Utility.RewardType GetRewardType()
     {
         return _config.rewardType;
     }
     
     [Serializable]
-    internal class SlotState
+    public class SlotState
     {
         public Utility.SlotStatus slotStatus;
         public Sprite statusSprite;
