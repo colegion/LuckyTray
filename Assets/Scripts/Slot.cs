@@ -15,7 +15,12 @@ public class Slot : MonoBehaviour
     [SerializeField] private SpriteRenderer tickSprite;
 
     [Header("Tween Settings")] 
-    [SerializeField] private float highlightDuration;
+    [SerializeField] private float baseHighlightDuration;
+    [SerializeField] private AnimationCurve baseHighlightCurve;
+    [SerializeField] private float finalHighlightDuration;
+    [SerializeField] private AnimationCurve finalHighlightCurve;
+    [SerializeField] private float outcomeHighlightDuration;
+    [SerializeField] private AnimationCurve outcomeHighlightCurve;
 
 
     private RewardConfig _config;
@@ -25,17 +30,27 @@ public class Slot : MonoBehaviour
         rewardField.sprite = config.rewardSprite;
     }
 
-    public void AnimateHighlight()
+    private float _durationToUse;
+    public void AnimateHighlight(bool isFinal = false, bool isOutcome = false)
     {
+        var curveToUse = isOutcome && isFinal ? outcomeHighlightCurve :
+            isFinal ? finalHighlightCurve : baseHighlightCurve;
+        _durationToUse = isOutcome && isFinal ? outcomeHighlightDuration :
+            isFinal ? finalHighlightDuration : baseHighlightDuration;
+        
             slotHighlight.enabled = true;
-            slotHighlight.DOColor(new Color(1, 1, 1, 1), .35f).SetEase(Ease.Linear).OnComplete(() =>
+            slotHighlight.DOColor(new Color(1, 1, 1, 1), _durationToUse).SetEase(curveToUse).OnComplete(() =>
             {
-                slotHighlight.DOColor(new Color(1, 1, 1, 0), .35f).OnComplete(() =>
+                slotHighlight.DOColor(new Color(1, 1, 1, 0), _durationToUse).OnComplete(() =>
                 {
                     slotHighlight.enabled = false;
                 });
-                
             });
+    }
+
+    public float GetCurrentDurationForDelay()
+    {
+        return _durationToUse;
     }
 
     public void HandleOnSlotGranted(Utility.SlotStatus status)

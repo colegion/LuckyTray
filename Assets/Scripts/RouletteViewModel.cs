@@ -75,8 +75,8 @@ public class RouletteViewModel : MonoBehaviour
 
         for (int i = 0; i < slots.Count; i++)
         {
-            slots[i].AnimateHighlight();
-            yield return new WaitForSeconds(baseDelay);
+            slots[i].AnimateHighlight(true, slots[i] == _lastOutcomeAsSlot);
+            yield return new WaitForSeconds(slots[i].GetCurrentDurationForDelay());
             if (slots[i] == _lastOutcomeAsSlot)
             {
                 _lastOutcomeAsSlot.HandleOnSlotGranted(Utility.SlotStatus.Granted);
