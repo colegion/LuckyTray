@@ -21,13 +21,16 @@ public class Slot : MonoBehaviour
     [SerializeField] private AnimationCurve finalHighlightCurve;
     [SerializeField] private float outcomeHighlightDuration;
     [SerializeField] private AnimationCurve outcomeHighlightCurve;
-
-
+    
     private RewardConfig _config;
     public void ConfigureSelf(RewardConfig config)
     {
         _config = config;
         rewardField.sprite = config.rewardSprite;
+        if (Wallet.IsRewardAlreadyClaimed((int)_config.rewardType))
+        {
+            SetSpriteByState(Utility.SlotStatus.Claimed);
+        }
     }
 
     private float _durationToUse;
@@ -62,6 +65,7 @@ public class Slot : MonoBehaviour
     public void SetSpriteByState(Utility.SlotStatus status)
     {
         slotBg.sprite = states.Find(x => x.slotStatus == status).statusSprite;
+        tickSprite.enabled = status == Utility.SlotStatus.Claimed;
     }
     
     public Utility.RewardType GetRewardType()

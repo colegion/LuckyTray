@@ -62,5 +62,11 @@ namespace Utilities
         {
             public int outcome;
         }
+
+        [Serializable]
+        public class ClaimedRewards
+        {
+            public int[] rewards;
+        }
     }
 }

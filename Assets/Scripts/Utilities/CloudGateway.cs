@@ -9,6 +9,7 @@ namespace Utilities
     public static class CloudGateway
     {
         private const string DECIDE_OUTCOME_ENDPOINT = "DecideOutcome";
+        private const string GET_CLAIMED_REWARDS_ENDPOINT = "GetClaimedRewards";
 
         public static async Task<int> GetOutcome()
         {
@@ -22,6 +23,21 @@ namespace Utilities
             {
                 Debug.LogError($"Error calling Cloud Code: {e}");
                 return -1;
+            }
+        }
+
+        public static async Task<int[]> GetCurrentRoundClaimedRewards()
+        {
+            var args = new Dictionary<string, object>();
+            try
+            {
+                var json = await CloudCodeService.Instance.CallEndpointAsync<Utility.ClaimedRewards>(GET_CLAIMED_REWARDS_ENDPOINT, args);
+                return json.rewards;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error calling Cloud Code: {e}");
+                return new int[]{};
             }
         }
     }

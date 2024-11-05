@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Utilities
@@ -7,6 +8,7 @@ namespace Utilities
     public static class Wallet
     {
         private static Dictionary<Utility.RewardType, int> _playerRewards;
+        private static int[] _currentRoundClaimedRewards;
         public static bool UIShouldUpdate = true;
         public static void AddReward(Utility.RewardType type)
         {
@@ -33,6 +35,16 @@ namespace Utilities
             }
         }
 
+        public static void SetCurrentRoundClaimedRewards(int[] cloudRewards)
+        {
+            _currentRoundClaimedRewards = cloudRewards;
+        }
+
+        public static bool IsRewardAlreadyClaimed(int type)
+        {
+            return _currentRoundClaimedRewards.Contains(type);
+        }
+        
         public static Dictionary<Utility.RewardType, int> GetPlayerRewards()
         {
             return _playerRewards;

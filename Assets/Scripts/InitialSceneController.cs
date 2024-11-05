@@ -18,6 +18,7 @@ public class InitialSceneController : MonoBehaviour
     {
         await UnityServices.InitializeAsync();
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        Wallet.SetCurrentRoundClaimedRewards(await CloudGateway.GetCurrentRoundClaimedRewards());
         Wallet.FetchUserRewards();
     }
 
