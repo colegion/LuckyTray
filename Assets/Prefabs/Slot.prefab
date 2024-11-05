@@ -158,7 +158,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -195,7 +195,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4272749442181520352}
@@ -225,6 +225,7 @@ MonoBehaviour:
   - slotStatus: 2
     statusSprite: {fileID: 21300000, guid: dc9d9d647ed0926448de9398a17e97de, type: 3}
   tickSprite: {fileID: 4597479141397480689}
+  scaleValue: 0.8
   baseHighlightDuration: 0.35
   baseHighlightCurve:
     serializedVersion: 2

@@ -13,7 +13,7 @@ public class RouletteViewModel : MonoBehaviour
     [SerializeField] private List<Slot> slots;
     [SerializeField] private Button spinButton;
     
-    [SerializeField] private float baseDelay;
+    [SerializeField] private float slotConfigureDelay;
     
     private Utility.RewardType _lastOutcomeAsEnum;
     private Slot _lastOutcomeAsSlot;
@@ -39,7 +39,7 @@ public class RouletteViewModel : MonoBehaviour
         
         for (int i = 0; i < iteration; i++)
         {
-            slots[i].ConfigureSelf(rewards[i]);
+            slots[i].ConfigureSelf(rewards[i], i * slotConfigureDelay);
         }
 
         for (int i = 0; i < slots.Count; i++)

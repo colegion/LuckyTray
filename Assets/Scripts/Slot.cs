@@ -14,7 +14,8 @@ public class Slot : MonoBehaviour
     [SerializeField] private List<SlotState> states;
     [SerializeField] private SpriteRenderer tickSprite;
 
-    [Header("Tween Settings")] 
+    [Header("Tween Settings")]
+    [SerializeField] private float scaleValue;
     [SerializeField] private float baseHighlightDuration;
     [SerializeField] private AnimationCurve baseHighlightCurve;
     [SerializeField] private float finalHighlightDuration;
@@ -27,14 +28,21 @@ public class Slot : MonoBehaviour
     
     private RewardConfig _config;
     private bool _alreadyClaimed;
-    public void ConfigureSelf(RewardConfig config)
+    public void ConfigureSelf(RewardConfig config, float delay)
     {
         _config = config;
-        rewardField.sprite = config.rewardSprite;
-        if (Wallet.IsRewardAlreadyClaimed((int)_config.rewardType))
+        DOVirtual.DelayedCall(delay, () =>
         {
-            SetSpriteByState(Utility.SlotStatus.Claimed);
-        }
+            transform.DOScale(new Vector3(scaleValue, scaleValue, scaleValue), baseHighlightDuration).SetEase(Ease.InCubic).OnComplete(() =>
+            {
+                rewardField.sprite = config.rewardSprite;
+                rewardField.DOColor(_fullAlpha, baseHighlightDuration).SetEase(Ease.Flash);
+                if (Wallet.IsRewardAlreadyClaimed((int)_config.rewardType))
+                {
+                    SetSpriteByState(Utility.SlotStatus.Claimed);
+                }
+            });
+        });
     }
 
     private float _durationToUse;
