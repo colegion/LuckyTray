@@ -79,7 +79,7 @@ public class RouletteViewModel : MonoBehaviour
             yield return new WaitForSeconds(slots[i].GetCurrentDurationForDelay());
             if (slots[i] == _lastOutcomeAsSlot)
             {
-                _lastOutcomeAsSlot.HandleOnSlotGranted(Utility.SlotStatus.Granted);
+                //_lastOutcomeAsSlot.HandleOnSlotGranted(Utility.SlotStatus.Granted);
                 walletUIHelper.AnimateRewardClaim(Utility.GetRewardConfigByType(_lastOutcomeAsEnum), () =>
                 {
                     ToggleButtonInteractable(true);

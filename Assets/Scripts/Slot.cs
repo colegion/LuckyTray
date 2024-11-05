@@ -21,6 +21,9 @@ public class Slot : MonoBehaviour
     [SerializeField] private AnimationCurve finalHighlightCurve;
     [SerializeField] private float outcomeHighlightDuration;
     [SerializeField] private AnimationCurve outcomeHighlightCurve;
+
+    private Color _fullAlpha = new Color(1, 1, 1, 1);
+    private Color _zeroAlpha = new Color(1, 1, 1, 0);
     
     private RewardConfig _config;
     public void ConfigureSelf(RewardConfig config)
@@ -42,24 +45,42 @@ public class Slot : MonoBehaviour
             isFinal ? finalHighlightDuration : baseHighlightDuration;
         
             slotHighlight.enabled = true;
-            slotHighlight.DOColor(new Color(1, 1, 1, 1), _durationToUse).SetEase(curveToUse).OnComplete(() =>
+            slotHighlight.DOColor(_fullAlpha, _durationToUse).SetEase(curveToUse).OnComplete(() =>
             {
-                slotHighlight.DOColor(new Color(1, 1, 1, 0), _durationToUse).OnComplete(() =>
+                slotHighlight.DOColor(_zeroAlpha, _durationToUse).OnComplete(() =>
                 {
-                    slotHighlight.enabled = false;
+                    if (isOutcome)
+                    {
+                        AnimateOutcomeHighlight();
+                    }
+                    else
+                    {
+                        slotHighlight.enabled = false;
+                    }
                 });
             });
     }
 
+    private void AnimateOutcomeHighlight()
+    {
+        Sequence sequence = DOTween.Sequence();
+        
+        SetSpriteByState(Utility.SlotStatus.Granted);
+        sequence.Append(slotHighlight.DOColor(_fullAlpha, baseHighlightDuration / 2f))
+            .Append(slotHighlight.DOColor(_zeroAlpha, baseHighlightDuration / 2f))
+            .SetLoops(3, LoopType.Yoyo);
+
+        sequence.OnComplete(() =>
+        {
+            tickSprite.enabled = true;
+            tickSprite.DOColor(_fullAlpha, 0.5f);
+        });
+    }
+
+
     public float GetCurrentDurationForDelay()
     {
         return _durationToUse;
-    }
-
-    public void HandleOnSlotGranted(Utility.SlotStatus status)
-    {
-        tickSprite.enabled = true;
-        SetSpriteByState(status);
     }
 
     public void SetSpriteByState(Utility.SlotStatus status)
