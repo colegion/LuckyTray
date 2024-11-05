@@ -42,7 +42,7 @@ namespace Utilities
             outcomeTrail.ConfigureSelf(config);
             outcomeTrail.AnimateParticle(() =>
             {
-                bagButton.transform.DOShakeScale(0.25f, 0.2f).SetEase(Ease.OutCirc);
+                bagButton.transform.DOShakeScale(0.35f, 0.4f).SetEase(Ease.OutCirc);
                 onComplete?.Invoke();
             });
         }

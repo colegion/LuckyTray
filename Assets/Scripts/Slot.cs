@@ -22,10 +22,11 @@ public class Slot : MonoBehaviour
     [SerializeField] private float outcomeHighlightDuration;
     [SerializeField] private AnimationCurve outcomeHighlightCurve;
 
-    private Color _fullAlpha = new Color(1, 1, 1, 1);
-    private Color _zeroAlpha = new Color(1, 1, 1, 0);
+    private readonly Color _fullAlpha = new Color(1, 1, 1, 1);
+    private readonly Color _zeroAlpha = new Color(1, 1, 1, 0);
     
     private RewardConfig _config;
+    private bool _alreadyClaimed;
     public void ConfigureSelf(RewardConfig config)
     {
         _config = config;
@@ -37,12 +38,12 @@ public class Slot : MonoBehaviour
     }
 
     private float _durationToUse;
-    public void AnimateHighlight(bool isFinal = false, bool isOutcome = false)
+    public void AnimateHighlight(bool nearEnough = false, bool isOutcome = false)
     {
-        var curveToUse = isOutcome && isFinal ? outcomeHighlightCurve :
-            isFinal ? finalHighlightCurve : baseHighlightCurve;
-        _durationToUse = isOutcome && isFinal ? outcomeHighlightDuration :
-            isFinal ? finalHighlightDuration : baseHighlightDuration;
+        var curveToUse = isOutcome && nearEnough ? outcomeHighlightCurve :
+            nearEnough ? finalHighlightCurve : baseHighlightCurve;
+        _durationToUse = isOutcome && nearEnough ? outcomeHighlightDuration :
+            nearEnough ? finalHighlightDuration : baseHighlightDuration;
         
             slotHighlight.enabled = true;
             slotHighlight.DOColor(_fullAlpha, _durationToUse).SetEase(curveToUse).OnComplete(() =>
@@ -76,8 +77,7 @@ public class Slot : MonoBehaviour
             tickSprite.DOColor(_fullAlpha, 0.5f);
         });
     }
-
-
+    
     public float GetCurrentDurationForDelay()
     {
         return _durationToUse;
@@ -87,6 +87,12 @@ public class Slot : MonoBehaviour
     {
         slotBg.sprite = states.Find(x => x.slotStatus == status).statusSprite;
         tickSprite.enabled = status == Utility.SlotStatus.Claimed;
+        _alreadyClaimed = status == Utility.SlotStatus.Claimed;
+    }
+
+    public bool GetClaimedStatus()
+    {
+        return _alreadyClaimed;
     }
     
     public Utility.RewardType GetRewardType()
