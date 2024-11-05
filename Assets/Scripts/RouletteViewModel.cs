@@ -17,7 +17,7 @@ public class RouletteViewModel : MonoBehaviour
     
     private Utility.RewardType _lastOutcomeAsEnum;
     private Slot _lastOutcomeAsSlot;
-
+    private List<Slot> _slotsWithoutHighlight = new List<Slot>();
     private void OnEnable()
     {
         AddListeners();
@@ -40,6 +40,14 @@ public class RouletteViewModel : MonoBehaviour
         for (int i = 0; i < iteration; i++)
         {
             slots[i].ConfigureSelf(rewards[i]);
+        }
+
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (!slots[i].GetClaimedStatus())
+            {
+                _slotsWithoutHighlight.Add(slots[i]);
+            }
         }
     }
 
@@ -67,22 +75,27 @@ public class RouletteViewModel : MonoBehaviour
         {
             for (int i = 0; i < slots.Count; i++)
             {
+                if(slots[i].GetClaimedStatus()) continue;
                 slots[i].AnimateHighlight();
-                yield return new WaitForSeconds(baseDelay);
+                yield return new WaitForSeconds(slots[i].GetCurrentDurationForDelay() / 2f);
             }
             iterationCount++;
         }
 
         for (int i = 0; i < slots.Count; i++)
         {
-            slots[i].AnimateHighlight(true, slots[i] == _lastOutcomeAsSlot);
+            if(slots[i].GetClaimedStatus()) continue;
+            var outcomeIndex = _slotsWithoutHighlight.FindIndex(x => x == _lastOutcomeAsSlot);
+            var isNear = i >= outcomeIndex - 3 && i <= outcomeIndex;
+            slots[i].AnimateHighlight(isNear, slots[i] == _lastOutcomeAsSlot);
             yield return new WaitForSeconds(slots[i].GetCurrentDurationForDelay());
             if (slots[i] == _lastOutcomeAsSlot)
             {
-                //_lastOutcomeAsSlot.HandleOnSlotGranted(Utility.SlotStatus.Granted);
                 walletUIHelper.AnimateRewardClaim(Utility.GetRewardConfigByType(_lastOutcomeAsEnum), () =>
                 {
+                    model.CheckRoundStatus();
                     ToggleButtonInteractable(true);
+                    _slotsWithoutHighlight.Remove(_lastOutcomeAsSlot);
                 });
                 
                 break;

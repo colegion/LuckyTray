@@ -10,6 +10,7 @@ namespace Utilities
     {
         private const string DECIDE_OUTCOME_ENDPOINT = "DecideOutcome";
         private const string GET_CLAIMED_REWARDS_ENDPOINT = "GetClaimedRewards";
+        private const string CHECK_ROUND_ENDPOINT = "IsRoundFinished";
 
         public static async Task<int> GetOutcome()
         {
@@ -38,6 +39,21 @@ namespace Utilities
             {
                 Debug.LogError($"Error calling Cloud Code: {e}");
                 return new int[]{};
+            }
+        }
+
+        public static async Task<bool> IsRoundFinished()
+        {
+            var args = new Dictionary<string, object>();
+            try
+            {
+                var json = await CloudCodeService.Instance.CallEndpointAsync<Utility.RoundStatus>(CHECK_ROUND_ENDPOINT, args);
+                return json.isFinished;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error calling Cloud Code: {e}");
+                return false;
             }
         }
     }

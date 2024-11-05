@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Utilities
@@ -67,6 +68,12 @@ namespace Utilities
         public class ClaimedRewards
         {
             public int[] rewards;
+        }
+
+        [Serializable]
+        public class RoundStatus
+        {
+            [JsonProperty(propertyName: "roundFinished")] public bool isFinished;
         }
     }
 }
