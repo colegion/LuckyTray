@@ -36,7 +36,7 @@ public class RouletteViewModel : MonoBehaviour
         }
         
         var iteration = rewards.Count > slots.Count ? slots.Count : rewards.Count;
-        
+        rewards.Shuffle();
         for (int i = 0; i < iteration; i++)
         {
             slots[i].ConfigureSelf(rewards[i], i * slotConfigureDelay);
