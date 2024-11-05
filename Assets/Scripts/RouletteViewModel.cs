@@ -63,7 +63,7 @@ public class RouletteViewModel : MonoBehaviour
     private IEnumerator AnimateSlotsProgressively()
     {
         var iterationCount = 0;
-        while (iterationCount < 3)
+        while (iterationCount < 2)
         {
             for (int i = 0; i < slots.Count; i++)
             {

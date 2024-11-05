@@ -9,6 +9,11 @@ namespace Utilities
     {
         [SerializeField] private SpriteRenderer rewardField;
         [SerializeField] private ParticleSystem trailParticle;
+        [SerializeField] private Transform worldTarget;
+        [SerializeField] private float tweenDuration;
+        [SerializeField] private float defaultScale;
+        [SerializeField] private float punchScale;
+        [SerializeField] private AnimationCurve moveCurve;
 
         public void ConfigureSelf(RewardConfig rewardConfig)
         {
@@ -21,10 +26,28 @@ namespace Utilities
             renderer.material = material;
         }
 
-        public void AnimateParticle(Vector3 target, Action onComplete)
+        public void AnimateParticle(Action onComplete)
         {
-            trailParticle.Play();
-            transform.DOMove(target, 0.5f).SetEase(Ease.OutBounce).OnComplete(() =>
+            float insertDuration = 0;
+            Sequence sequence = DOTween.Sequence();
+            sequence.InsertCallback(insertDuration, () =>
+            {
+                transform.DOScale(new Vector3(defaultScale, defaultScale, defaultScale), tweenDuration).SetEase(Ease.Linear);
+            });
+            insertDuration += tweenDuration;
+            sequence.InsertCallback(insertDuration, () =>
+            {
+                transform.DOPunchScale(new Vector3(punchScale, punchScale, punchScale), tweenDuration).SetEase(Ease.Linear);
+            });
+            insertDuration += tweenDuration;
+            sequence.InsertCallback(insertDuration, () =>
+            {
+                trailParticle.gameObject.SetActive(true);
+                trailParticle.Play();
+            });
+            sequence.AppendInterval(trailParticle.main.duration);
+            sequence.Append(transform.DOMove(worldTarget.position, .75f).SetEase(moveCurve));
+            sequence.AppendCallback(() =>
             {
                 ResetSelf();
                 onComplete?.Invoke();
@@ -34,8 +57,11 @@ namespace Utilities
         private void ResetSelf()
         {
             rewardField.enabled = false;
-            trailParticle.Stop();
+            rewardField.enabled = false;
+            trailParticle.gameObject.SetActive(false);
+            trailParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             transform.position = Vector3.zero;
+            transform.localScale = Vector3.zero;
         }
     }
 }

@@ -39,11 +39,10 @@ namespace Utilities
 
         public void AnimateRewardClaim(RewardConfig config, Action onComplete)
         {
-            
             outcomeTrail.ConfigureSelf(config);
-            outcomeTrail.AnimateParticle(bagButton.transform.position, () =>
+            outcomeTrail.AnimateParticle(() =>
             {
-                bagButton.transform.DOShakeScale(0.5f, 0.15f).SetEase(Ease.Linear);
+                bagButton.transform.DOShakeScale(0.25f, 0.2f).SetEase(Ease.OutCirc);
                 onComplete?.Invoke();
             });
         }
