@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utilities;
 
 public class InitialSceneController : MonoBehaviour
 {
+    [SerializeField] private string gameSceneAddress;
     [SerializeField] private Button playButton;
-
-    private readonly string _gameSceneName = "BarbecuePartyScene";
 
     private async void Awake()
     {
@@ -36,7 +38,7 @@ public class InitialSceneController : MonoBehaviour
 
     private void RedirectToGame()
     {
-        SceneManager.LoadScene(_gameSceneName);
+        SceneLoader.LoadSceneAsync(SceneType.Game);
     }
 
     private void AddListeners()

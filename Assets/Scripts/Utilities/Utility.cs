@@ -10,10 +10,8 @@ namespace Utilities
     public class Utility : MonoBehaviour
     {
         [SerializeField] private string rewardsAddress;
-
         private static List<RewardConfig> _rewards;
         public static event Action<List<RewardConfig>> OnRewardConfigsLoaded;
-
         private void Awake()
         {
             LoadRewards();

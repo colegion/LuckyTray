@@ -47,7 +47,7 @@ public class RouletteModel : MonoBehaviour
         var roundCompleted = await CloudGateway.IsRoundFinished();
         if (roundCompleted)
         {
-            SceneManager.LoadScene(_initialSceneName);
+            SceneLoader.LoadSceneAsync(SceneType.Intro);
         }
     }
 

@@ -24,10 +24,10 @@ public class RouletteViewModel : MonoBehaviour
 
     public void LoadSlots()
     {
-        Addressables.LoadAssetsAsync<GameObject>(slotsLabel, null).Completed += OnRewardsLoaded;
+        Addressables.LoadAssetsAsync<GameObject>(slotsLabel, null).Completed += OnSlotsLoaded;
     }
 
-    private void OnRewardsLoaded(AsyncOperationHandle<IList<GameObject>> handle)
+    private void OnSlotsLoaded(AsyncOperationHandle<IList<GameObject>> handle)
     {
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
