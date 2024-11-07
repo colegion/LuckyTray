@@ -23,6 +23,16 @@ MonoBehaviour:
     m_SerializedLabels:
     - slots
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 657a81ebfe24e4147b9756bd9205fad6
+    m_Address: Scenes/InitialScene
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a128108e33dd5914c8a981b94fb74517
+    m_Address: Scenes/BarbecueParty
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 98d80e71ab274a04195ef0cc3f193dee, type: 2}
   m_SchemaSet:
