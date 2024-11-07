@@ -12,14 +12,26 @@ public class RouletteModel : MonoBehaviour
 
     private readonly string _initialSceneName = "InitialScene";
 
-    private void Start()
+    private void OnEnable()
     {
-        InitiateRoulette();
+        AddListeners();
     }
 
-    private void InitiateRoulette()
+    private void OnDisable()
     {
-        rouletteViewModel.DistributeRewardsToSlots(Utility.GetRewards());
+        RemoveListeners();
+    }
+
+    private List<RewardConfig> _rewards; 
+    private void InitiateRoulette(List<RewardConfig> configs)
+    {
+        _rewards = configs;
+        rouletteViewModel.LoadSlots();
+    }
+
+    public List<RewardConfig> GetRewards()
+    {
+        return _rewards;
     }
 
     public async Task<Utility.RewardType> SpinRoulette()
@@ -37,5 +49,15 @@ public class RouletteModel : MonoBehaviour
         {
             SceneManager.LoadScene(_initialSceneName);
         }
+    }
+
+    private void AddListeners()
+    {
+        Utility.OnRewardConfigsLoaded += InitiateRoulette;
+    }
+
+    private void RemoveListeners()
+    {
+        Utility.OnRewardConfigsLoaded -= InitiateRoulette;
     }
 }

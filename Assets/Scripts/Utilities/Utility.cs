@@ -2,18 +2,40 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Utilities
 {
     public class Utility : MonoBehaviour
     {
-        [SerializeField] private List<RewardConfig> rouletteRewards;
+        [SerializeField] private string rewardsAddress;
 
         private static List<RewardConfig> _rewards;
+        public static event Action<List<RewardConfig>> OnRewardConfigsLoaded;
 
         private void Awake()
         {
-            _rewards = new List<RewardConfig>(rouletteRewards);
+            LoadRewards();
+        }
+
+        private void LoadRewards()
+        {
+            Addressables.LoadAssetsAsync<RewardConfig>(rewardsAddress, null).Completed += OnRewardsLoaded;
+        }
+
+        private void OnRewardsLoaded(AsyncOperationHandle<IList<RewardConfig>> handle)
+        {
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                _rewards = new List<RewardConfig>(handle.Result);
+                OnRewardConfigsLoaded?.Invoke(_rewards);
+            }
+            else
+            {
+                Debug.LogWarning("Failed to load rewards from Addressables, using default list.");
+                _rewards = new List<RewardConfig>();
+            }
         }
 
         public static RewardType GetRewardTypeAsEnum(int outcome)
@@ -25,11 +47,6 @@ namespace Utilities
         public static RewardConfig GetRewardConfigByType(RewardType type)
         {
             return _rewards.Find(x => x.rewardType == type);
-        }
-
-        public static List<RewardConfig> GetRewards()
-        {
-            return _rewards;
         }
         
         public enum RewardType

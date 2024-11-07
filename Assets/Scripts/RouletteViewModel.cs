@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Utilities;
@@ -10,14 +12,38 @@ public class RouletteViewModel : MonoBehaviour
 {
     [SerializeField] private RouletteModel model;
     [SerializeField] private WalletUIHelper walletUIHelper;
-    [SerializeField] private List<Slot> slots;
+    [SerializeField] private string slotsLabel;
     [SerializeField] private Button spinButton;
     
     [SerializeField] private float slotConfigureDelay;
     
     private Utility.RewardType _lastOutcomeAsEnum;
     private Slot _lastOutcomeAsSlot;
-    private List<Slot> _slotsWithoutHighlight = new List<Slot>();
+    private List<Slot> _slots;
+    private readonly List<Slot> _slotsWithoutHighlight = new List<Slot>();
+
+    public void LoadSlots()
+    {
+        Addressables.LoadAssetsAsync<GameObject>(slotsLabel, null).Completed += OnRewardsLoaded;
+    }
+
+    private void OnRewardsLoaded(AsyncOperationHandle<IList<GameObject>> handle)
+    {
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            var parent = handle.Result[0];
+            var parentInstance = Instantiate(parent, parent.transform.position, Quaternion.identity);
+            var children = parentInstance.GetComponentsInChildren<Slot>();
+            _slots = new List<Slot>(children);
+            DistributeRewardsToSlots(model.GetRewards());
+        }
+        else
+        {
+            Debug.LogWarning("Could not load game slots!");
+            _slots = new List<Slot>();
+        }
+    }
+
     private void OnEnable()
     {
         AddListeners();
@@ -30,23 +56,23 @@ public class RouletteViewModel : MonoBehaviour
 
     public void DistributeRewardsToSlots(List<RewardConfig> rewards)
     {
-        if (slots.Count != rewards.Count)
+        if (_slots.Count != rewards.Count)
         {
             Debug.LogError("Count mismatch between slots and rewards! Continuing with list ordering");
         }
         
-        var iteration = rewards.Count > slots.Count ? slots.Count : rewards.Count;
+        var iteration = rewards.Count > _slots.Count ? _slots.Count : rewards.Count;
         rewards.Shuffle();
         for (int i = 0; i < iteration; i++)
         {
-            slots[i].ConfigureSelf(rewards[i], i * slotConfigureDelay);
+            _slots[i].ConfigureSelf(rewards[i], i * slotConfigureDelay);
         }
 
-        for (int i = 0; i < slots.Count; i++)
+        for (int i = 0; i < _slots.Count; i++)
         {
-            if (!slots[i].GetClaimedStatus())
+            if (!_slots[i].GetClaimedStatus())
             {
-                _slotsWithoutHighlight.Add(slots[i]);
+                _slotsWithoutHighlight.Add(_slots[i]);
             }
         }
     }
@@ -65,7 +91,7 @@ public class RouletteViewModel : MonoBehaviour
 
     private void SetLastOutcomeAsSlot()
     {
-        _lastOutcomeAsSlot = slots.Find(slot => slot.GetRewardType() == _lastOutcomeAsEnum);
+        _lastOutcomeAsSlot = _slots.Find(slot => slot.GetRewardType() == _lastOutcomeAsEnum);
     }
     
     private IEnumerator AnimateSlotsProgressively()
@@ -73,23 +99,23 @@ public class RouletteViewModel : MonoBehaviour
         var iterationCount = 0;
         while (iterationCount < 2)
         {
-            for (int i = 0; i < slots.Count; i++)
+            for (int i = 0; i < _slots.Count; i++)
             {
-                if(slots[i].GetClaimedStatus()) continue;
-                slots[i].AnimateHighlight();
-                yield return new WaitForSeconds(slots[i].GetCurrentDurationForDelay() / 2f);
+                if(_slots[i].GetClaimedStatus()) continue;
+                _slots[i].AnimateHighlight();
+                yield return new WaitForSeconds(_slots[i].GetCurrentDurationForDelay() / 2f);
             }
             iterationCount++;
         }
 
-        for (int i = 0; i < slots.Count; i++)
+        for (int i = 0; i < _slots.Count; i++)
         {
-            if(slots[i].GetClaimedStatus()) continue;
+            if(_slots[i].GetClaimedStatus()) continue;
             var outcomeIndex = _slotsWithoutHighlight.FindIndex(x => x == _lastOutcomeAsSlot);
             var isNear = i >= outcomeIndex - 3 && i <= outcomeIndex;
-            slots[i].AnimateHighlight(isNear, slots[i] == _lastOutcomeAsSlot);
-            yield return new WaitForSeconds(slots[i].GetCurrentDurationForDelay());
-            if (slots[i] == _lastOutcomeAsSlot)
+            _slots[i].AnimateHighlight(isNear, _slots[i] == _lastOutcomeAsSlot);
+            yield return new WaitForSeconds(_slots[i].GetCurrentDurationForDelay());
+            if (_slots[i] == _lastOutcomeAsSlot)
             {
                 walletUIHelper.AnimateRewardClaim(Utility.GetRewardConfigByType(_lastOutcomeAsEnum), () =>
                 {

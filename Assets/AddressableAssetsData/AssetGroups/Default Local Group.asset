@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: fa3b1a7df81b9594b85583cf03effd79
+  m_SerializeEntries:
+  - m_GUID: c5851566af9a5e14fbbb70fe01600f86
+    m_Address: Assets/Prefabs/Slots.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - slots
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 98d80e71ab274a04195ef0cc3f193dee, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: aca30ed478dd82347b06a029553a5da1, type: 2}
+    - {fileID: 11400000, guid: dd051e7300288364b95c4fbb997ef17d, type: 2}
