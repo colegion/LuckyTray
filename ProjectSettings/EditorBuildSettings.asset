@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 0
+    path: Assets/Scenes/InitialScene.unity
+    guid: 657a81ebfe24e4147b9756bd9205fad6
   - enabled: 0
     path: Assets/Scenes/BarbecuePartyScene.unity
     guid: a128108e33dd5914c8a981b94fb74517
