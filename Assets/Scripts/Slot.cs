@@ -46,15 +46,17 @@ public class Slot : MonoBehaviour
     }
 
     private float _durationToUse;
+    
     public void AnimateHighlight(bool nearEnough = false, bool isOutcome = false)
     {
         var curveToUse = isOutcome && nearEnough ? outcomeHighlightCurve :
             nearEnough ? finalHighlightCurve : baseHighlightCurve;
         _durationToUse = isOutcome && nearEnough ? outcomeHighlightDuration :
             nearEnough ? finalHighlightDuration : baseHighlightDuration;
+
+        slotHighlight.enabled = true;
         
-            slotHighlight.enabled = true;
-            slotHighlight.DOColor(_fullAlpha, _durationToUse).SetEase(curveToUse).OnComplete(() =>
+        slotHighlight.DOColor(_fullAlpha, _durationToUse).SetEase(curveToUse).OnComplete(() =>
             {
                 slotHighlight.DOColor(_zeroAlpha, _durationToUse).OnComplete(() =>
                 {
@@ -88,7 +90,7 @@ public class Slot : MonoBehaviour
     
     public float GetCurrentDurationForDelay()
     {
-        return _durationToUse;
+        return _durationToUse * 2f;
     }
 
     public void SetSpriteByState(Utility.SlotStatus status)
