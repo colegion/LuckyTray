@@ -90,7 +90,7 @@ public class Slot : MonoBehaviour
     
     public float GetCurrentDurationForDelay()
     {
-        return _durationToUse * 2f;
+        return _durationToUse;
     }
 
     public void SetSpriteByState(Utility.SlotStatus status)

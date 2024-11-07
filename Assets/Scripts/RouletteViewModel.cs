@@ -111,10 +111,14 @@ public class RouletteViewModel : MonoBehaviour
         for (int i = 0; i < _slots.Count; i++)
         {
             if(_slots[i].GetClaimedStatus()) continue;
+            var isOutcome = _slots[i] == _lastOutcomeAsSlot;
             var outcomeIndex = _slotsWithoutHighlight.FindIndex(x => x == _lastOutcomeAsSlot);
             var isNear = i >= outcomeIndex - 3 && i <= outcomeIndex;
-            _slots[i].AnimateHighlight(isNear, _slots[i] == _lastOutcomeAsSlot);
-            yield return new WaitForSeconds(_slots[i].GetCurrentDurationForDelay());
+            _slots[i].AnimateHighlight(isNear, isOutcome);
+            var delay = isOutcome
+                ? _slots[i].GetCurrentDurationForDelay() * 2f
+                : _slots[i].GetCurrentDurationForDelay(); 
+            yield return new WaitForSeconds(delay);
             if (_slots[i] == _lastOutcomeAsSlot)
             {
                 walletUIHelper.AnimateRewardClaim(Utility.GetRewardConfigByType(_lastOutcomeAsEnum), () =>

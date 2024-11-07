@@ -226,7 +226,7 @@ MonoBehaviour:
     statusSprite: {fileID: 21300000, guid: dc9d9d647ed0926448de9398a17e97de, type: 3}
   tickSprite: {fileID: 4597479141397480689}
   scaleValue: 0.8
-  baseHighlightDuration: 0.35
+  baseHighlightDuration: 0.3
   baseHighlightCurve:
     serializedVersion: 2
     m_Curve:

@@ -49,20 +49,20 @@ namespace Utilities
         
         public enum RewardType
         {
-            Beer = 0,
-            Candy,
-            Coconut,
-            Croissant,
-            Donut,
-            Egg,
-            Fig,
-            GodFood,
-            HotChocolate,
-            HotDog,
-            Mushroom,
-            Noodle,
-            Pineapple,
-            Shrimp,
+            Item0 = 0,
+            Item1,
+            Item2,
+            Item3,
+            Item4,
+            Item5,
+            Item6,
+            Item7,
+            Item8,
+            Item9,
+            Item10,
+            Item11,
+            Item12,
+            Item13,
         }
 
         public enum SlotStatus
