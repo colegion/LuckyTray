@@ -61,22 +61,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 4533683760489427812}
   walletUIHelper: {fileID: 0}
-  slotsAddress: slots
-  slots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  slotsLabel: slots
   spinButton: {fileID: 0}
   slotConfigureDelay: 0.15
 --- !u!114 &792564645137573296
