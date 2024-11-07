@@ -10,8 +10,6 @@ public class RouletteModel : MonoBehaviour
 {
     [SerializeField] private RouletteViewModel rouletteViewModel;
 
-    private readonly string _initialSceneName = "InitialScene";
-
     private void OnEnable()
     {
         AddListeners();

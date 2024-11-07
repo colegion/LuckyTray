@@ -8,7 +8,7 @@ namespace Utilities
 {
     public static class SceneLoader
     {
-        private static Dictionary<SceneType, string> _sceneAddresses = new Dictionary<SceneType, string>()
+        private static readonly Dictionary<SceneType, string> SceneAddresses = new Dictionary<SceneType, string>()
         {
             { SceneType.Intro , "Scenes/InitialScene" },
             { SceneType.Game , "Scenes/BarbecueParty" }
@@ -16,7 +16,7 @@ namespace Utilities
         
         public static void LoadSceneAsync(SceneType type)
         {
-            Addressables.LoadSceneAsync(_sceneAddresses[type]).Completed += OnSceneLoaded;
+            Addressables.LoadSceneAsync(SceneAddresses[type]).Completed += OnSceneLoaded;
         }
         
         private static void OnSceneLoaded(AsyncOperationHandle<SceneInstance> obj)
