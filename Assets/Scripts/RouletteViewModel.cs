@@ -96,60 +96,44 @@ public class RouletteViewModel : MonoBehaviour
     
     private IEnumerator AnimateSlotsProgressively()
     {
-        yield return StartCoroutine(AnimateSlotsInRounds(2));
-
-        yield return StartCoroutine(AnimateFinalOutcome());
-    }
-
-    private IEnumerator AnimateSlotsInRounds(int rounds)
-    {
-        for (int iteration = 0; iteration < rounds; iteration++)
+        var iterationCount = 0;
+        while (iterationCount < 2)
         {
-            foreach (var slot in _slots)
+            for (int i = 0; i < _slots.Count; i++)
             {
-                if (slot.GetClaimedStatus()) continue;
-
-                slot.AnimateHighlight();
-                yield return new WaitForSeconds(slot.GetCurrentDurationForDelay() / 2f);
+                if(_slots[i].GetClaimedStatus()) continue;
+                _slots[i].AnimateHighlight();
+                yield return new WaitForSeconds(_slots[i].GetCurrentDurationForDelay() / 2f);
             }
+            iterationCount++;
         }
-    }
-
-    private IEnumerator AnimateFinalOutcome()
-    {
-        int outcomeIndex = _slotsWithoutHighlight.FindIndex(x => x == _lastOutcomeAsSlot);
 
         for (int i = 0; i < _slots.Count; i++)
         {
-            var slot = _slots[i];
-            if (slot.GetClaimedStatus()) continue;
-
-            bool isOutcome = slot == _lastOutcomeAsSlot;
-            bool isNear = i >= outcomeIndex - 3 && i <= outcomeIndex;
-
-            slot.AnimateHighlight(isNear, isOutcome);
-        
-            float delay = isOutcome ? slot.GetCurrentDurationForDelay() * 2f : slot.GetCurrentDurationForDelay();
+            if(_slots[i].GetClaimedStatus()) continue;
+            var isOutcome = _slots[i] == _lastOutcomeAsSlot;
+            var outcomeIndex = _slotsWithoutHighlight.FindIndex(x => x == _lastOutcomeAsSlot);
+            var isNear = i >= outcomeIndex - 3 && i <= outcomeIndex;
+            _slots[i].AnimateHighlight(isNear, isOutcome);
+            var delay = isOutcome
+                ? _slots[i].GetCurrentDurationForDelay() * 2f
+                : _slots[i].GetCurrentDurationForDelay(); 
             yield return new WaitForSeconds(delay);
-
-            if (isOutcome)
+            if (_slots[i] == _lastOutcomeAsSlot)
             {
-                HandleOutcomeAnimation();
+                walletUIHelper.AnimateRewardClaim(Utility.GetRewardConfigByType(_lastOutcomeAsEnum), () =>
+                {
+                    model.CheckRoundStatus();
+                    ToggleButtonInteractable(true);
+                    _slotsWithoutHighlight.Remove(_lastOutcomeAsSlot);
+                });
+                
                 break;
             }
         }
+        
+        yield return null;
     }
-
-    private void HandleOutcomeAnimation()
-    {
-        walletUIHelper.AnimateRewardClaim(Utility.GetRewardConfigByType(_lastOutcomeAsEnum), () =>
-        {
-            model.CheckRoundStatus();
-            ToggleButtonInteractable(true);
-            _slotsWithoutHighlight.Remove(_lastOutcomeAsSlot);
-        });
-    }
-
 
     private void ToggleButtonInteractable(bool toggle)
     {
